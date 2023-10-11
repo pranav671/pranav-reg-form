@@ -25,9 +25,26 @@ const setCategoryChangeHandler = (e) => {
 }
 
 let display = (e)=> {
-	setSize(parseInt(e.target.value));
-	setInputform(new Array[e.target.value]);
-	setdata("Selected options are<br/> Event = " + event+"<br/>category = "+category+"<br/>teamsize = "+e.target.value);
+	let n = parseInt(e.target.value)
+	setSize(n);
+	let temp = [];
+	for(let x=0; x<n; x++)
+		temp.push({name:'', email:''});
+	setInputform(temp);
+	console.log(inputform + inputform.length);
+	// setdata("Selected options are<br/> Event = " + event+"<br/>category = "+category+"<br/>teamsize = "+e.target.value);
+}
+
+let handleEmailChange = (e, i)=> {
+	let updateState = [...inputform];
+	updateState[i].email = e.target.value;
+	setInputform(updateState);
+}
+
+let handleNameChange = (e, i) => {
+	let updateState = [...inputform];
+	updateState[i].name = e.target.value;
+	setInputform(updateState);
 }
 
 /** Different arrays for different dropdowns */
@@ -110,9 +127,26 @@ return (
 				teamsizeOptions
 			}
 		</select>
-		{size && <div>{data}</div>}
+		{size >0 && <div>{data}</div>}
+		<h2>Enter data</h2>
 		{
-			inputform
+			inputform.length >0 &&(
+			inputform.map((el, i) => {
+				<div key={i}>
+					<input 
+					type="text"
+					placeholder="Name"
+					value={el.name}
+					onChange={(e)=>handleNameChange(e,i)}
+					/>
+					<input
+					type="email"
+					placeholder="Email"
+					value={el.email}
+					onChange={(e)=>handleEmailChange(e,i)}
+					/>
+				</div>
+			}))
 		}
 		</div> 
 	</form> 
