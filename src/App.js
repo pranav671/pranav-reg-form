@@ -1,5 +1,6 @@
 import './App.css';
 import SelectGroup from './components/select group';
+import MyNavbar from './components/Navbar';
 
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <div>
-        navbar
+        <MyNavbar/>
       </div>
       <div>
           <SelectGroup>
