@@ -1,25 +1,29 @@
 import './App.css';
-import SelectGroup from './components/select group';
-import MyNavbar from './components/Navbar';
+import Fun from './Fun';
+import {Routes, Route, BrowserRouter as Router} from 'react-router-dom';
+import { Home } from './components/Home';
+import React from 'react';
 
 
 function App() {
 
-  return (
-    <div className="App">
-      <div>
-        <MyNavbar/>
-      </div>
-      <div>
-          <SelectGroup>
+  const [data, setData]  = React.useState([]);
 
-          </SelectGroup>
-      </div>
-      
-    </div>
+  const saveData = (data) => {
+    console.log('Data recieved in app.js');
+    setData(data);
+  }
+
+  return (
+
+    <Router>
+      <Routes>
+          <Route path='/' element={<Home data={data} onSave={saveData}/>}/>
+          <Route path='/continue' element={<Fun data={data}/>}/>
+      </Routes>
+    </Router>
   );
 
-  
-}
 
+}
 export default App;

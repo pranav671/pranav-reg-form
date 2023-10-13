@@ -8,21 +8,23 @@ const SelectGroup = (props) => {
 	const [category, setCategory] = React.useState("");
 	// const [size, setSize] = React.useState(0);
 	const size = React.useRef(0);
-	const [inputdataList, setInputdataList] = React.useState([]);
+	const [inputdataList, setInputdataList] = React.useState(props.data);
+	const [storeddataList, setStoreddataList] = React.useState(props.data);
 	/** Function that will set different values to state variable 
 	* based on which dropdown is selected 
 	*/
 	const setEventChangeHandler = (e) => {
 		setEvent(e.target.value);
 		size.current = 0;
-		document.getElementById('sizeSelect').value = 'choose...';
+		// document.getElementById('sizeSelect').value = 'choose...';
 	};
 
 	const setCategoryChangeHandler = (e) => {
-		setCategory(e.target.value);
-		size.current = 0;
+		// size.current = 0;
 		document.getElementById('sizeSelect').value = 'choose...';
 		document.getElementById('hit').disabled = false;	
+		setStoreddataList([]);
+		setCategory(e.target.value);
 	}
 
 	const handleSizechange = (e) => {
@@ -31,11 +33,13 @@ const SelectGroup = (props) => {
 	}
 
 	const loadForm = (e) => {
+		teamsizeList = null;
 		e.preventDefault();
-		console.log(e);
+
+		// console.log(e);
 		flag = false;
 		document.getElementById('hit').disabled = true;
-		console.log(inputdataList);
+		// console.log(inputdataList);
 		let temp = [];
 		while(temp.length < size.current)
 		{
@@ -70,6 +74,28 @@ const SelectGroup = (props) => {
 		console.log("form submission");
 	}
 
+	const resetForm = (e) =>
+	{
+		e.preventDefault();
+		window.location.reload(false);	
+	}
+
+	const saveNcontinue = (e) =>
+	{
+		e.preventDefault();
+		let temp = [];
+		for(let i=0; i<inputdataList.length; i++)
+		{
+			let el = inputdataList[i];
+			el.id = i;
+			temp.push(el);
+		}
+		// console.log(temp);
+		inputdataOptions = null;
+		props.onStoreData(temp);
+		setStoreddataList(temp);
+	}
+
 	// const savedata = (data) => {
 	// 	props.onSaveData(data);
 	// }
@@ -83,6 +109,7 @@ const SelectGroup = (props) => {
 	let teamsizeList = null;
 	let flag = false;
 
+	/** Store input values for time being */
 	/** This will be used to create set of options that user will see */
 	let categoryOptions = null;
 	let teamsizeOptions = null;
@@ -143,7 +170,6 @@ const SelectGroup = (props) => {
 							type="text"
 							value={i.name}
 							placeholder="Name"
-							
 							onChange={(e) =>handleNameChange(e,x)}/>
 						<input
 							type="email"
@@ -153,6 +179,10 @@ const SelectGroup = (props) => {
 					</div>);
 		inputdataOptions.push(<div>Eveny = {event} <br/> Category = {category} <br/> Teamsize = {size.current}</div>)
 	}
+	if(storeddataList.length> 0)
+	{
+		inputdataOptions = storeddataList.map((el, i) => {<p>{i}. Name = {el.name} Email = {el.email}<br/></p>})
+	}
 
 	return (
 		<div
@@ -161,7 +191,7 @@ const SelectGroup = (props) => {
 				margin: "16px",
 			}}
 		>
-			<form	>
+			<form>
 				<div>
 					{/** Bind changeSelectOptionHandler to onChange method of select. 
 		* This method will trigger every time different 
@@ -193,7 +223,7 @@ const SelectGroup = (props) => {
 				{
 					inputdataOptions
 				}
-				
+				{inputdataOptions && <span> <button onClick={resetForm}>Reset</button> <span style={{'width' : '2rem'}}/> <button onClick={saveNcontinue}>Save and Continue</button></span>}
 			</form>
 		</div>
 	);
