@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 
 const SelectGroup = (props) => {
 	/** "selected" here is state variable which will hold the 
@@ -13,6 +14,8 @@ const SelectGroup = (props) => {
 	/** Function that will set different values to state variable 
 	* based on which dropdown is selected 
 	*/
+
+	const navigate = useNavigate();
 	const setEventChangeHandler = (e) => {
 		setEvent(e.target.value);
 		size.current = 0;
@@ -91,9 +94,12 @@ const SelectGroup = (props) => {
 			temp.push(el);
 		}
 		// console.log(temp);
-		inputdataOptions = null;
-		props.onStoreData(temp);
-		setStoreddataList(temp);
+		inputdataOptions = null	;
+		props.onSave(temp);
+		let ttemp = {'event' : event,'cat': category};
+		setStoreddataList(temp.push, ttemp);
+
+		navigate('/continue')
 	}
 
 	// const savedata = (data) => {
