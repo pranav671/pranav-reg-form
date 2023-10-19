@@ -10,9 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 export const Page1 = (props) => {
   const [events, setEvents] = useState({
-    event1: 3,
-    event2: 5,
-    event3: 2,
+    'Event 1': 3,
+    'Event 2': 5,
+    'Event 3': 2,
   });
   const [categories, setCategories] = useState({
     cat1: 3,
@@ -29,7 +29,8 @@ export const Page1 = (props) => {
 
   const loadNextPage = (e) => {
     e.preventDefault();
-    props.onSave(teamMembers);
+    let temp = {'event':selectedEvent, 'cat':selectedCategory}
+    props.onSave(teamMembers, temp);
     navigate('/continue');
   };
 
@@ -43,9 +44,9 @@ export const Page1 = (props) => {
     setSelectedTeamSize,
   }) => {
     return (
-      <div className="web-container">
+      <div className="container">
         <div className="appointment-header">Team Details</div>
-        <div className="row">
+        <div className="d-inline-flex row">
           <EventDropDown
             events={events}
             selectedEvent={selectedEvent}
@@ -65,6 +66,7 @@ export const Page1 = (props) => {
         <div>{selectedInfo}</div>
         <div>
           <TeamTable
+          style={{'justify-content':'center'}}
             events={events}
             selectedEvent={selectedEvent}
             teamsize={selectedTeamSize}
@@ -210,7 +212,7 @@ export const Page1 = (props) => {
               })}
             </tbody>
           </table>
-          <div className="web-container">
+          <div className="container">
             <button
               className="btn-outline-success btn"
               onClick={(e) => loadNextPage(e)}
@@ -226,7 +228,7 @@ export const Page1 = (props) => {
   };
 
   return (
-    <div>
+    <div className="form">
       {/* <MyNavbar /> */}
       <Content
         events={events}

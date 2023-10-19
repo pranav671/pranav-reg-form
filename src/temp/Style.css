@@ -20,13 +20,26 @@
 
 body {
     font-family: open_sansregular,Helvetica,Arial,sans-serif!important;
-    color: #656565!important;
+    color: #000000!important;
     height: 100%;
     font-size: 12px;
-    background-color: #edeceb!important;
+    background-color: #f9f8f7!important;
     font-weight: 400;
+    align-items: center;
+    justify-content: center;
 }
 
+.container{
+    color: #000;
+    justify-content: center;
+    align-items: center;
+    padding-left: 20vh;
+}
+
+.form {
+    align-items: center;
+    justify-content: center;
+}
 
 .row {
     display: flex;
@@ -40,19 +53,20 @@ body {
 .appointment-header {
     border-bottom: 1px #E7E9EA solid;
     color: #17458c;
-    font-size: 20px;
+    font-size: 5vh;
     padding: 10px 0;
     margin-left : 20px;
 }
 .web-container {
     background-color: #fff;
-    padding-left: 300px;
-    padding-right: 300px;
-    min-height: auto;
+    padding-left: 50vh;
+    /* padding-right: 50vh; */
+    margin-left : 10px;
+    min-height: 90vh;
 }
 .dropdownContainer {
-    margin: 20px;
-    width: 200px;
+    margin-top: 20px;
+    width: 30vh;
 }
 .navbar {
     background-color: #f9f8f7;
@@ -61,7 +75,7 @@ body {
     border-radius: 0;
     z-index: 999;
     border: 0;
-    height: 56px;
+    height: 50px;
 }
 .navbar>.container, .navbar>.container-fluid, .navbar>.container-lg, .navbar>.container-md, .navbar>.container-sm, .navbar>.container-xl, .navbar>.container-xxl {
     display: flex;
@@ -82,7 +96,7 @@ body {
     --bs-table-active-bg: rgba(0, 0, 0, 0.1);
     --bs-table-hover-color: #212529;
     --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
-    width: 100%;
+    width: 70%;
     margin-bottom: 1rem;
     color: #212529;
     vertical-align: top;
@@ -96,16 +110,24 @@ body {
     vertical-align: bottom;
 }
 
-tbody, td, tfoot, th, thead, tr {
+tbody, tfoot, thead, tr {
     border-color: inherit;
     border-style: solid;
     border-width: 2px;
+    width: 60%;
+} 
+td {
+    border-width: 0cap;
+    font-size: large;
+    color: #000;
+    border-width: 2px;
+    padding-left: 5vh;
 }
 th {
-    width: 25%;
     border: 1px #ccc solid;
     padding: 5px;
 }
+
 .emailInput {
     background-color: transparent;
     border-color: transparent;
