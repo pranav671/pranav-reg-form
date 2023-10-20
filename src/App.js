@@ -1,16 +1,16 @@
+import React from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import Fun from "./Fun";
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
-import { Home } from "./components/Home";
-import { Page1 } from "./temp/Page1";
-import React from "react";
 import SelectGroup from "./components/select group";
-import './temp/Style.css'
+import { Page1 } from "./temp/Page1";
+import './temp/Style.css';
 
 function App() {
   const [data, setData] = React.useState([]);
   const [info, setInfo] = React.useState({'event':'','cat':''});
 
+  
   const saveData = (data, x) => {
     console.log("Data recieved in app.js");
     console.log(data);

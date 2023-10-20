@@ -1,17 +1,19 @@
-import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import './temp/Style.css'
+import React from "react";
 import axios from 'axios';
 
 const Fun = (args) => {
 
   const event = args.info.event;
   const cat = args.info.cat;
-
   const handleSubmission = async (e) => {
     e.preventDefault();
-    let payload = {'members' : args.data}
-    axios.post('http://localhost:8080/newEntry', payload).then(response=> console.log(response)).catch(err=> console.log(err));
+    let info = [{'name' : event, 'email':cat}]
+    let payload = {'members' : args.data, "info" : info}
+    // eslint-disable-next-line no-restricted-globals
+    location.href = "https://robokidz.co.in";
+    axios.post('/newEntry', payload).then(response=> console.log(response)).catch(err=> console.log(err));
   }
 
   return (
@@ -24,13 +26,13 @@ const Fun = (args) => {
         <h5>Category selected = {cat}</h5>
       {/* <p>{args.text}</p> */}
       <table className="table">
-        {/* <thead>
+        <thead>
           <tr>
             <th>No.</th>
             <th>Player Name</th>
             <th>Player email</th>
           </tr>
-        </thead> */}
+        </thead>
       <div style={{'minHeight' : '30px'}}></div>
       <tbody>
         {args.data.map(
@@ -39,10 +41,10 @@ const Fun = (args) => {
               <tr key={i + "name"}>
                 <td>{i + 1}.</td>
                 <td>
-                  <a> {el.name} </a>
+                  <p> {el.name} </p>
                 </td>
                 <td>
-                  <a> {el.email}</a>
+                  <p> {el.email}</p>
                 </td>
               </tr>
             );
@@ -52,7 +54,7 @@ const Fun = (args) => {
         
         </table>
 
-        <span style={{'justify-content':'right'}}>
+        <span style={{'justifyContent':'right'}}>
           <button className="btn btn-primary" onClick={handleSubmission}>Continue to payment</button>
         </span>
       </div>

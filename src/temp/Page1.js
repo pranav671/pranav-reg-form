@@ -1,12 +1,9 @@
-import React, { useState } from "react";
-import Dropdown from "react-dropdown";
-import "react-dropdown/style.css";
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import "font-awesome/css/font-awesome.min.css";
 import "bootstrap/dist/css/bootstrap.css";
-import "./Style.css";
-import MyNavbar from "../components/Navbar";
+import "font-awesome/css/font-awesome.min.css";
+import React, { useState } from "react";
+import "react-dropdown/style.css";
 import { useNavigate } from "react-router-dom";
+import "./Style.css";
 
 export const Page1 = (props) => {
   const [events, setEvents] = useState({
@@ -29,10 +26,30 @@ export const Page1 = (props) => {
 
   const loadNextPage = (e) => {
     e.preventDefault();
-    let temp = {'event':selectedEvent, 'cat':selectedCategory}
-    props.onSave(teamMembers, temp);
-    navigate('/continue');
+    if(verifyIp())
+    {
+        let temp = {'event':selectedEvent, 'cat':selectedCategory}
+        props.onSave(teamMembers, temp);
+        navigate('/continue');
+    }
+    else
+    {
+      alert("Please enter valid values");
+    }
   };
+
+  const verifyIp = () => {
+    for(let member in teamMembers)
+    {
+      if(member.name == "" || member.email == '')
+        return false;
+      let s = member.email;
+      let reg = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,10}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/
+      if(!reg.test(s)) 
+      return false;
+    }
+    return true;
+  }
 
   let selectedInfo = "";
 
@@ -204,7 +221,7 @@ export const Page1 = (props) => {
                         onChange={(e) => {
                           teamMembers[ind].email = e.target.value;
                         }}
-                        pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                        // pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
                       />
                     </th>
                   </tr>
