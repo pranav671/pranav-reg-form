@@ -109,6 +109,9 @@ body {
     color: #fff;
     vertical-align: bottom;
 }
+.card{
+    background-color: #ecf4e1;
+}
 
 tbody, tfoot, thead, tr {
     border-color: inherit;

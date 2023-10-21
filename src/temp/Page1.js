@@ -7,16 +7,11 @@ import "./Style.css";
 
 export const Page1 = (props) => {
   const [events, setEvents] = useState({
-    'Event 1': 3,
-    'Event 2': 5,
-    'Event 3': 2,
+    "Robotics Premier League": 2,
+    "Geek Gala": 5,
+    "S.T.E.A.M. Workshops": 1,
   });
-  const [categories, setCategories] = useState({
-    cat1: 3,
-    cat2: 4,
-    cat3: 2,
-    cat4: 1,
-  });
+  const [categories, setCategories] = useState({});
   const [selectedEvent, setSelectedEvent] = useState("Select Event");
   const [selectedCategory, setSelectedCategory] = useState("Select Category");
   const [selectedTeamSize, setSelectedTeamSize] = useState("Select Team Size");
@@ -26,74 +21,71 @@ export const Page1 = (props) => {
 
   const loadNextPage = (e) => {
     e.preventDefault();
-    if(verifyIp())
-    {
-        let temp = {'event':selectedEvent, 'cat':selectedCategory}
-        props.onSave(teamMembers, temp);
-        navigate('/continue');
+    let temp = { event: selectedEvent, cat: selectedCategory };
+    props.onSave(teamMembers, temp);
+    navigate("/continue");
+  };
+
+  const handleEventChange = (e) => {
+    let event = String(e.target.value);
+    setSelectedEvent(event);
+    if (event === "Robotics Premier League") {
+      setCategories({
+        "Robo-Soccer (Wired)": 0,
+        "Robo-Soccer (Wireless)": 1,
+        "Robo-Racer (Wired)": 2,
+        "Robo-Raced (Wireless)": 3,
+        "Line Follower": 4,
+      });
     }
-    else
-    {
-      alert("Please enter valid values");
+    if (event === "Geek Gala") setCategories({ "Geek Gala": 10 });
+    if (event === "S.T.E.A.M. Workshops") {
+      setCategories({
+        //TODO: list of workshops to be rendered
+        "Workshop 1": 21,
+        "Workshop 2": 22,
+      });
     }
   };
 
-  const verifyIp = () => {
-    for(let member in teamMembers)
-    {
-      if(member.name == "" || member.email == '')
-        return false;
-      let s = member.email;
-      let reg = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,10}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/
-      if(!reg.test(s)) 
-      return false;
-    }
-    return true;
+  const verifyEmail = (e,i)=>{
+    //TODO implement api call  
   }
 
-  let selectedInfo = "";
+  const verifyPhone = (e,i)=>{
+    //TODO implement api call  
+  }
 
-  const Content = ({
-    events,
-    setSelectedEvent,
-    selectedEvent,
-    selectedTeamSize,
-    setSelectedTeamSize,
-  }) => {
+  // const verifyIp = () => {
+  //   for(let member in teamMembers)
+  //   {
+  //     if(member.name == "" || member.email == '')
+  //       return false;
+  //     let s = member.email;
+  //     let reg = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,10}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/
+  //     if(!reg.test(s))
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
+  const Content = () => {
     return (
       <div className="container">
         <div className="appointment-header">Team Details</div>
         <div className="d-inline-flex row">
-          <EventDropDown
-            events={events}
-            selectedEvent={selectedEvent}
-            setSelectedEvent={setSelectedEvent}
-          />
-          <CategoryDropDown
-            categories={categories}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-          />
-          <TeamSizeDropDown
-            events={categories}
-            selectedEvent={selectedCategory}
-            setTeamSize={setSelectedTeamSize}
-          />
+          <EventDropDown />
+          <CategoryDropDown />
+          <TeamSizeDropDown />
         </div>
-        <div>{selectedInfo}</div>
         <div>
-          <TeamTable
-          style={{'justify-content':'center'}}
-            events={events}
-            selectedEvent={selectedEvent}
-            teamsize={selectedTeamSize}
-          />
+          <TeamTable />
         </div>
       </div>
     );
   };
 
-  const EventDropDown = ({ events, selectedEvent, setSelectedEvent }) => {
+  const EventDropDown = () => {
     return (
       <div className="form-sapcing dropdownContainer">
         <label htmlFor="eventDrop">
@@ -103,7 +95,7 @@ export const Page1 = (props) => {
         <select
           id="eventDrop"
           className="form-select"
-          onChange={(e) => setSelectedEvent(e.target.value)}
+          onChange={(e) => handleEventChange(e)}
           disabled={selectedTeamSize != "Select Team Size"}
           placeholder="Select Event"
         >
@@ -116,11 +108,7 @@ export const Page1 = (props) => {
     );
   };
 
-  const CategoryDropDown = ({
-    categories,
-    selectedCategory,
-    setSelectedCategory,
-  }) => {
+  const CategoryDropDown = () => {
     if (selectedEvent && selectedEvent != "Select Event") {
       return (
         <div className="form-spacing dropdownContainer">
@@ -151,8 +139,8 @@ export const Page1 = (props) => {
     }
   };
 
-  const TeamSizeDropDown = ({ events, selectedEvent, setTeamSize }) => {
-    if (selectedEvent && selectedEvent != "Select Category") {
+  const TeamSizeDropDown = () => {
+    if (selectedCategory && selectedCategory != "Select Category") {
       return (
         <div className=" dropdownContainer">
           <label htmlFor="teamDrop">
@@ -163,13 +151,18 @@ export const Page1 = (props) => {
             id="teamDrop"
             onChange={(e) => {
               let n = e.target.value;
-              setTeamSize(n);
-              console.log(n);
+              setSelectedTeamSize(n);
               let temp = [];
               while (temp.length < n) {
-                temp.push({ name: "", email: "" });
+                temp.push({
+                  name: "",
+                  email: "",
+                  phoneNum: "",
+                  whatsappNum: "",
+                });
               }
               setTeamMembers(temp);
+              console.log(n);
             }}
             className="form-select"
             placeholder="Select Event"
@@ -187,12 +180,95 @@ export const Page1 = (props) => {
     }
   };
 
-  const TeamTable = ({ events, selectedEvent, teamsize }) => {
-    if (selectedEvent != "Select Event" && teamsize != "Select Team Size") {
-      // console.log("Called table")
+  const TeamTable = () => {
+    if (
+      selectedEvent != "Select Event" &&
+      selectedTeamSize != "Select Team Size"
+    ) {
+      console.log("Called table");
       return (
         <>
-          <table className="table">
+          <ol>
+            {teamMembers.map((el, i) => {
+              return (
+                <li>
+                  <div key={"input of " + i} className="card w-75">
+                    <div className="d-flex inline-block">
+                      <div className="inline-group mb-3 input-group">
+                        <span className="input-group-text">Name</span>
+                        <input
+                          type="text"
+                          placeholder="Enter Name"
+                          className="form-control w-60"
+                        />
+                      </div>
+                      <div className="input-group mb-3 inline-block">
+                        <input
+                          type="email"
+                          placeholder="Enter e-mail"
+                          className="form-control"
+                        />
+                        <button onClick={(e)=>verifyEmail(e, i)} className='btn btn-outline-success' type="button">Verify</button>
+                      </div>
+                    </div>
+                    <div className="input-group mb-3">
+                    <span className="input-group-text">Contact</span>
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        minLength={10}
+                        placeholder="Mobile No."
+                        className="form-control"
+                        required
+                        pattern="[1-9]{1}[0-9]{9}"
+                      />
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        minLength={10}
+                        placeholder="WhatsApp No."
+                        className="form-control"
+                      />
+                      <button onClick={(e)=>verifyPhone(e, i)} className='btn btn-outline-success' type="button">Verify</button>
+                    </div>
+                    <div className="input-group mb-3">
+                    <span className="input-group-text">School</span>
+                      <input className="form-control" type="text" placeholder="School Name"/>
+                    </div>
+                    <div className="input-group mb-3">
+                      <textarea></textarea>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+
+          <div className="container">
+            <button
+              className="btn-outline-success btn"
+              onClick={(e) => loadNextPage(e)}
+            >
+              Continue
+            </button>
+          </div>
+        </>
+      );
+    } else {
+      return "";
+    }
+  };
+
+  return (
+    <div className="form">
+      {/* <MyNavbar /> */}
+      <Content />
+    </div>
+  );
+};
+
+/**
+ * <table className="table">
             <thead className="tablehead">
               <tr>
                 <th>No.</th>
@@ -201,7 +277,7 @@ export const Page1 = (props) => {
               </tr>
             </thead>
             <tbody>
-              {[...Array(parseInt(teamsize))].map((ob, ind) => {
+              {[...Array(parseInt(selectedTeamSize))].map((ob, ind) => {
                 return (
                   <tr key={ind + "input"}>
                     <th>{ind + 1}</th>
@@ -229,31 +305,4 @@ export const Page1 = (props) => {
               })}
             </tbody>
           </table>
-          <div className="container">
-            <button
-              className="btn-outline-success btn"
-              onClick={(e) => loadNextPage(e)}
-            >
-              Continue
-            </button>
-          </div>
-        </>
-      );
-    } else {
-      return "";
-    }
-  };
-
-  return (
-    <div className="form">
-      {/* <MyNavbar /> */}
-      <Content
-        events={events}
-        selectedEvent={selectedEvent}
-        setSelectedEvent={setSelectedEvent}
-        selectedTeamSize={selectedTeamSize}
-        setSelectedTeamSize={setSelectedTeamSize}
-      />
-    </div>
-  );
-};
+ */
