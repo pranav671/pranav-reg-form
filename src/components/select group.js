@@ -72,11 +72,6 @@ const SelectGroup = (props) => {
 		// console.log(e)
 	}
 
-	const submitForm = (e) =>{
-		e.preventDefault();
-		console.log("form submission");
-	}
-
 	const resetForm = (e) =>
 	{
 		e.preventDefault();

@@ -39,13 +39,15 @@ export const Page1 = (props) => {
   };
 
   const verifyIp = () => {
-    for(let member in teamMembers)
+    for(let i=0; i<teamMembers.length; i++)
     {
+      let member = teamMembers[i];
+      console.log("name: "+member.name+" email: "+member.email);
       if(member.name == "" || member.email == '')
         return false;
       let s = member.email;
-      let reg = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,10}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/
-      if(!reg.test(s)) 
+      let reg2 = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+      if(!reg2.test(s)) 
       return false;
     }
     return true;
@@ -234,7 +236,7 @@ export const Page1 = (props) => {
               className="btn-outline-success btn"
               onClick={(e) => loadNextPage(e)}
             >
-              Continue
+              Proceed to payment
             </button>
           </div>
         </>

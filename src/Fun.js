@@ -13,6 +13,7 @@ const Fun = (args) => {
     let payload = {'members' : args.data, "info" : info}
     // eslint-disable-next-line no-restricted-globals
     location.href = "https://robokidz.co.in";
+    // eslint-disable-next-line no-restricted-globals
     axios.post('/newEntry', payload).then(response=> console.log(response)).catch(err=> console.log(err));
   }
 
