@@ -1,9 +1,10 @@
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.min.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-dropdown/style.css";
 import { useNavigate } from "react-router-dom";
 import "./Style.css";
+import { ClipLoader } from "react-spinners";
 
 export const Page1 = (props) => {
   const [events, setEvents] = useState({
@@ -11,23 +12,92 @@ export const Page1 = (props) => {
     "Geek Gala": 5,
     "S.T.E.A.M. Workshops": 1,
   });
-  const classList = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', "XI", "XII"];
+  const classList = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', "XI", "XII"]
   const [categories, setCategories] = useState({});
   const [selectedEvent, setSelectedEvent] = useState("Select Event");
   const [selectedCategory, setSelectedCategory] = useState("Select Category");
   const [selectedTeamSize, setSelectedTeamSize] = useState("Select Team Size");
   const [teamMembers, setTeamMembers] = useState([]);
+  const [nameArr, setNamearr] = useState([]);
+  const [pinArr, setPinarr] = useState([]);
+  
+
+  useEffect(()=> {
+    //set input values here
+    // isloading = true;
+    for(let i=0; i<teamMembers.length; i++)
+    {
+      // const getCity = async () => {
+      
+      //   for(let i=0; i<teamMembers.length; i++)
+      //   {
+      //     if(teamMembers[i].pin.length != 6)
+      //       continue;
+      //     const result = await fetch ('https://api.postalpincode.in/pincode/'+teamMembers[i].pin);
+      //     result.json().then( json =>{
+      //       console.log("fetched for"+i);
+      //       if(json[0].Status == 'Success'){
+      //         let str = json[0].PostOffice[0].Block+", "+json[0].PostOffice[0].District+", "+json[0].PostOffice[0].State+", India."
+      //         teamMembers[i].add2 = str
+      //         document.getElementById("inputAdd2"+i).value = str;
+      //       }
+      //       else  
+      //       teamMembers[i].add2 = "Invalid PIN detected"
+      //     }
+      //     )
+      //   }
+      // }
+      // getCity().then(()=> {
+          try
+          {
+            document.getElementById("inputName"+i).value = teamMembers[i].name;
+            document.getElementById("inputEmail"+i).value = teamMembers[i].email;
+            document.getElementById("inputPhone"+i).value = teamMembers[i].phoneNum;
+            document.getElementById("inputWhatsapp"+i).value = teamMembers[i].whatsappNum;
+            document.getElementById("inputSchool"+i).value = teamMembers[i].school;
+            document.getElementById("inputAdd1"+i).value = teamMembers[i].add1;
+            document.getElementById("inputAdd2"+i).value = teamMembers[i].add2;
+            document.getElementById("inputPin"+i).value = teamMembers[i].pin;
+          }
+          catch(err)
+          {
+            // console.log("Error",err)
+          }
+      //   })
+      }
+    }, [pinArr])
 
 
+    const loadFromIp = (s, i) => {
+      const getCity = async (s,i) => {
+          const result = await fetch ('https://api.postalpincode.in/pincode/'+s);
+          result.json().then( json =>{
+            console.log("fetched for"+i);
+            if(json[0].Status == 'Success'){
+              let str = json[0].PostOffice[0].Block+", "+json[0].PostOffice[0].District+", "+json[0].PostOffice[0].State+", India."
+              teamMembers[i].add2 = str
+              document.getElementById("inputAdd2"+i).value = str;
+            }
+            else  
+            teamMembers[i].add2 = "Invalid PIN detected"
+          }
+          )
+    }
+    getCity(s, i);
+  }
+  
+  
   const navigate = useNavigate();
 
+  
   const loadNextPage = (e) => {
     e.preventDefault();
-    let temp = { event: selectedEvent, cat: selectedCategory };
-    props.onSave(teamMembers, temp);
-    navigate("/continue");
-  };
+      let temp = { event: selectedEvent, cat: selectedCategory };
+      props.onSave(teamMembers, temp);
+      navigate("/continue");
 
+  };
+  
   const handleEventChange = (e) => {
     let event = String(e.target.value);
     setSelectedEvent(event);
@@ -49,32 +119,19 @@ export const Page1 = (props) => {
       });
     }
   };
-
+  
   const verifyEmail = (e, i) => {
+    
     //TODO implement api call  
+    let temp = [...teamMembers];
+    setTeamMembers(temp);
   }
-
+  
   const verifyPhone = (e, i) => {
     //TODO implement api call  
   }
-
-  const loadFromPin = (e, i) => {
-    //TODO make api call and load city and state from pincode
-  }
-
-  // const verifyIp = () => {
-  //   for(let member in teamMembers)
-  //   {
-  //     if(member.name == "" || member.email == '')
-  //       return false;
-  //     let s = member.email;
-  //     let reg = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,10}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/
-  //     if(!reg.test(s))
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
+  
+  
   const Content = () => {
     return (
       <div className="container">
@@ -166,12 +223,17 @@ export const Page1 = (props) => {
                   phoneNum: "",
                   whatsappNum: "",
                   standard:'',
+                  school: '',
                   pin:'',
                   add1: '',
-                  add2: ''
+                  add2: '',
+                  phoneVerified:false,
+                  emailVerified:false
                 });
               }
               setTeamMembers(temp);
+              setNamearr(Array(parseInt(n)))
+              setPinarr(Array(parseInt(n)));
               console.log(n);
             }}
             className="form-select"
@@ -195,7 +257,6 @@ export const Page1 = (props) => {
       selectedEvent != "Select Event" &&
       selectedTeamSize != "Select Team Size"
     ) {
-      console.log("Called table");
       return (
         <>
           <ol>
@@ -205,52 +266,62 @@ export const Page1 = (props) => {
                   <div key={"input of " + i} className="card w-75 mb-5">
                     <div className="d-flex inline-block">
                       <div className="mb-3 input-group">
-                        <span className="input-group-text">Name</span>
-                        <input
+                      <span className="input-group-text">Name</span>
+                          <input
                           type="text"
                           placeholder="Enter Name"
                           className="form-control w-60"
+                          id={"inputName"+i}
+                          onChange={(e) => {
+                            member.name = e.target.value;
+                          }}
                         />
                       </div>
                       <div className="input-group mb-3">
+                      <span className="input-group-text">Email</span>
                         <input
                           type="email"
                           placeholder="Enter e-mail"
                           className="form-control"
+                          id={"inputEmail"+i}
+                          onChange={(e) => member.email = e.target.value}
                         />
-                        <button onClick={(e) => verifyEmail(e, i)} className='btn btn-outline-success' type="button">Verify</button>
+                        {/* <button onClick={(e) => verifyEmail(e, i)} className='btn btn-outline-success' type="button">Verify</button> */}
                       </div>
                     </div>
                     <div className="input-group mb-3">
                       <span className="input-group-text">Contact</span>
                       <input
-                        type="tel"
+                        type="number"
                         maxLength={10}
-                        minLength={10}
                         placeholder="Mobile No."
                         className="form-control"
-                        required
-                        pattern="[1-9]{1}[0-9]{9}"
+                        id={"inputPhone"+i}
+                        required pattern="[1-9]{1}[0-9]{9}"
+                        onChange={e => member.phoneNum = e.target.value}
                       />
                       <input
-                        type="tel"
-                        maxLength={10}
-                        minLength={10}
+                        required type="number"
+                        maxLength={10} 
+                        id={"inputWhatsapp"+i}
                         placeholder="WhatsApp No."
                         className="form-control"
+                        onChange={e => member.whatsappNum = e.target.value}
                       />
-                      <button onClick={(e) => verifyPhone(e, i)} className='btn btn-outline-success' type="button">Verify</button>
+                      {/* <button onClick={(e) => verifyPhone(e, i)} className='btn btn-outline-success' type="button">Verify</button> */}
                     </div>
 
                     <div className="d-flex inline-block">
                       <div className="input-group w-25 mb-3">
                         <span className="input-group-text">Class</span>
-                        <select id="standard-Selection" className='form-control' onChange={(e) => {
+                        <select id={"standard-Selection"+i} className='form-control' onChange={(e) => {
                           member.standard = e.target.value;
                         }} placeholder="Standard">
                           {
                             classList.map((std, stdIx) => {
                               return (
+                                std == member.standard ?
+                                  <option selected key={std+"std"}>{std}</option> :
                                 <option key={std + 'std'}>{std}</option>
                               )
                             })
@@ -259,21 +330,30 @@ export const Page1 = (props) => {
                       </div>
                       <div className="input-group mb-3">
                         <span className="input-group-text">School</span>
-                        <input className="form-control" type="text" placeholder="School Name" />
+                        <input className="form-control" type="text" id={"inputSchool"+i} placeholder="School Name" onChange={e => member.school = e.target.value}/>
                       </div>
                     </div>
                     <div className="d-flex inline-block">
                       <div className="input-group mb-3">
                         <span className="input-group-text">Address 1</span>
-                        <input type="text" className="form-control"/>
+                        <input type="text" className="form-control" id={"inputAdd1"+i} placeholder="House no, Lane, Area, Village/City" onChange={e => member.add1 = e.target.value}/>
                       </div>
                       <div className="input-group mb-3 w-35">
                         <span className="input-group-text">PIN</span>
-                        <input type="int" maxLength={6} className="form-control" onChange={(e) => loadFromPin(e, i)}/>
+                        <input type="int" maxLength={6} id={"inputPin"+i} className="form-control" onChange={(e) =>{
+                          if(e.target.value.length == 6)
+                          {
+                            loadFromIp(e.target.value, i);
+                            let temp = [...pinArr];
+                            temp[i] = e.target.value;
+                            setPinarr(temp);
+                          }
+                           member.pin = e.target.value
+                           }}/>
                       </div>
                     </div>
                     <div className="input-group">
-                      <input className="form-control" readOnly={true} id={"cityNstate"+i} value={member.add2} placeholder="City and State will be loaded from entered pincode"/>
+                      <input className="form-control-plaintext" readOnly={true} id={"inputAdd2"+i} placeholder="Block, District and State will be loaded from entered pincode"/>
                     </div>
                   </div>
                 </li>
@@ -297,8 +377,9 @@ export const Page1 = (props) => {
   };
 
   return (
-    <div className="form">
+    <div className="form mb-5">
       {/* <MyNavbar /> */}
+      {/* {console.log(teamMembers)} */}
       <Content />
     </div>
   );
