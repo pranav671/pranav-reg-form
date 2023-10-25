@@ -9,7 +9,6 @@ import './temp/Style.css';
 function App() {
   const [data, setData] = React.useState([]);
   const [info, setInfo] = React.useState({'event':'','cat':''});
-
   
   const saveData = (data, x) => {
     console.log("Data recieved in app.js");

@@ -2,7 +2,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import './temp/Style.css'
 import React, {useEffect, useReducer, useState } from "react";
 import axios from 'axios';
-import { json } from "react-router-dom";
 
 const Fun = (args) => {
 
@@ -10,13 +9,51 @@ const Fun = (args) => {
   const event = args.info.event;
   const cat = args.info.cat;
   const [ignored, forceUpdate] = useReducer( x=>x+1, 0)
+  const [id, setId] = useState('')
+  const [paymentLink , setPaymentLink] = useState("Err");
 
   const handleSubmission = async (e) => {
     e.preventDefault();
-    let info = [{ 'name': event, 'email': cat }]
+    let info = [{ 'name': event, 'email': cat, 'phoneVerified' : false, 'school': 'error'}]
     let payload = { 'members': args.data, "info": info }
+    // check for verification
+    // teamMembers.forEach(element => {
+    //   if(!element.phoneVerified || !element.emailVerified)
+    //   {
+    //     alert("Please complete the verification first!!!")
+    //   }
+    // });
+    if(id != '')
+    {
+      axios.get('/newLink/'+id).then(response => {
+        console.log(response)
+        let links = String(response.data);
+        let payment_url = links.split(", ")[1];
+        if(payment_url === 'error')
+        {
+          alert('Error creating payment link.\nPlease try again');
+        }
+        else
+          setPaymentLink(payment_url);
+        let id = links.split(", ")[0];
+        setId(id);
+      }).catch(err => console.log(err));
+      return;
+    }
     // eslint-disable-next-line no-restricted-globals
-    axios.post('/newEntry', payload).then(response => console.log(response)).catch(err => console.log(err));
+    axios.post('/newEntry', payload).then(response => {
+      console.log(response)
+      let links = String(response.data);
+      let payment_url = links.split(", ")[1];
+      if(payment_url === 'error')
+      {
+        alert('Error creating payment link.\nPlease try again');
+      }
+      else
+        setPaymentLink(payment_url);
+      let id = links.split(", ")[0];
+      setId(id);
+    }).catch(err => console.log(err));
 
   }
 
@@ -40,17 +77,18 @@ const Fun = (args) => {
       <div className="container m-5 ">
         <ol>
           {teamMembers.map((member, i) => {
+            console.log(id ) 
             return (
               <li>
-                <div key={"input of " + i} className="card w-80 mb-5">
+                <div key={"input of " + i} className="card w-80">
                   <div className="d-flex inline-block">
-                    <div className="mb-3 input-group">
+                    <div className=" input-group mb-3">
                       <span className="input-group-text">Name</span>
                       <input
                         type="text"
                         className="form-control w-60"
                         value={member.name}
-                        disabled='true'
+                        readOnly='true'
                       />
                     </div>
                     <div className="input-group mb-3">
@@ -59,7 +97,7 @@ const Fun = (args) => {
                         type="email"
                         className="form-control"
                         value={member.email}
-                        disabled='true'
+                        readOnly
                       />
                       <button onClick={(e) => verifyEmail(e, i)} className='btn btn-outline-success' type="button">Verify</button>
                     </div>
@@ -70,13 +108,13 @@ const Fun = (args) => {
                       type="number"
                       className="form-control"
                       value={member.phoneNum}
-                      disabled='true'
+                      readOnly='true'
                     />
                     <input
                       required type="number"
                       className="form-control"
                       value={member.whatsappNum}
-                      disabled='true'
+                      readOnly='true'
                     />
                     <button onClick={(e) => verifyPhone(e, i)} className='btn btn-outline-success' type="button">Verify</button>
                   </div>
@@ -87,36 +125,50 @@ const Fun = (args) => {
                       <input
                         type="text"
                         className="form-control"
-                        disabled='true'
+                        readOnly='true'
                         value={member.standard}
                       />
                     </div>
                     <div className="input-group mb-3">
                       <span className="input-group-text">School</span>
-                      <input className="form-control" type="text" value={member.school} disabled='true' />
+                      <input className="form-control" type="text" value={member.school} readOnly='true' />
                     </div>
                   </div>
                   <div className="d-flex inline-block">
                     <div className="input-group mb-3">
                       <span className="input-group-text">Address 1</span>
-                      <input type="text" className="form-control" value={member.add1} disabled='true' />
+                      <input type="text" className="form-control" value={member.add1} readOnly='true' />
                     </div>
                     <div className="input-group mb-3 w-35">
                       <span className="input-group-text">PIN</span>
-                      <input type="int" maxLength={6} className="form-control" disabled='true' value={member.pin} />
+                      <input type="int" maxLength={6} className="form-control" readOnly='true' value={member.pin} />
                     </div>
                   </div>
                   <div className="input-group">
-                    <input className="form-control" readOnly={true} id={"cityNstate" + i} disabled='true' value={teamMembers[i].add2 == '' ? 'Invalid PIN detected please re-fill the form' : teamMembers[i].add2} />
+                    <input className="form-control" readOnly={true} id={"cityNstate" + i} value={teamMembers[i].add2 == '' ? 'Invalid PIN detected please re-fill the form' : teamMembers[i].add2} />
                   </div>
                 </div>
               </li>
             );
           })}
         </ol>
-        <div className="container m-5">
-          <button className="btn btn-outline-primary" onClick={handleSubmission}>Continue to Payment</button>
+        {
+          teamMembers.length>0 &&
+        <div className="text-center w-80">
+          <br/>
+          {
+            paymentLink === 'Err'
+            ?
+            <button className="btn btn-outline-primary" onClick={handleSubmission}>Load Payment Link</button>
+            :
+            <a href={paymentLink} target="_blank" className="btn btn-success">Proceed to payment</a>
+          }
+          {
+            id !=='' &&
+          <p>You can track your application details with Id = {id}</p>
+          }
         </div>
+        }
       </div>
 
     </>

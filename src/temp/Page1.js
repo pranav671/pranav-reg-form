@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import "react-dropdown/style.css";
 import { useNavigate } from "react-router-dom";
 import "./Style.css";
-import { ClipLoader } from "react-spinners";
 
 export const Page1 = (props) => {
   const [events, setEvents] = useState({
@@ -20,11 +19,11 @@ export const Page1 = (props) => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [nameArr, setNamearr] = useState([]);
   const [pinArr, setPinarr] = useState([]);
-  
+  const [flag, setFlag] = useState(false);  
 
   useEffect(()=> {
     //set input values here
-    // isloading = true;
+
     for(let i=0; i<teamMembers.length; i++)
     {
       // const getCity = async () => {
@@ -63,13 +62,17 @@ export const Page1 = (props) => {
           {
             // console.log("Error",err)
           }
+          
       //   })
       }
     }, [pinArr])
 
 
+
+
     const loadFromIp = (s, i) => {
       const getCity = async (s,i) => {
+
           const result = await fetch ('https://api.postalpincode.in/pincode/'+s);
           result.json().then( json =>{
             console.log("fetched for"+i);
@@ -80,10 +83,12 @@ export const Page1 = (props) => {
             }
             else  
             teamMembers[i].add2 = "Invalid PIN detected"
+            
           }
           )
     }
     getCity(s, i);
+
   }
   
   
@@ -92,6 +97,13 @@ export const Page1 = (props) => {
   
   const loadNextPage = (e) => {
     e.preventDefault();
+    teamMembers.forEach(el => {
+      if(el.pin.length != 6)
+      {
+        alert("Invalid PIN detected");
+        return;
+      }
+    })
       let temp = { event: selectedEvent, cat: selectedCategory };
       props.onSave(teamMembers, temp);
       navigate("/continue");
@@ -119,17 +131,6 @@ export const Page1 = (props) => {
       });
     }
   };
-  
-  const verifyEmail = (e, i) => {
-    
-    //TODO implement api call  
-    let temp = [...teamMembers];
-    setTeamMembers(temp);
-  }
-  
-  const verifyPhone = (e, i) => {
-    //TODO implement api call  
-  }
   
   
   const Content = () => {
@@ -258,7 +259,7 @@ export const Page1 = (props) => {
       selectedTeamSize != "Select Team Size"
     ) {
       return (
-        <>
+        <div>
           <ol>
             {teamMembers.map((member, i) => {
               return (
@@ -361,7 +362,7 @@ export const Page1 = (props) => {
             })}
           </ol>
 
-          <div className="container">
+          <div className="text-center w-75">
             <button
               className="btn-outline-success btn"
               onClick={(e) => loadNextPage(e)}
@@ -369,7 +370,7 @@ export const Page1 = (props) => {
               Continue
             </button>
           </div>
-        </>
+        </div>
       );
     } else {
       return "";
