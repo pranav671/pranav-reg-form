@@ -47,8 +47,8 @@ export default function Exp() {
               <input className='form-control w-50' id='OTPinput' placeholder='OTP'/>
               <button className='btn btn-primary mt-4' onClick={(e)=> {
                 let ip = document.getElementById('OTPinput').value;
-                imageListClasses(ip < 400000)
-                    Toast
+                if(ip < 400000)
+                    console.log("first")
               }}>Submit</button>
             </Typography>
           </Box>

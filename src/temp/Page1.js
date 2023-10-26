@@ -99,6 +99,11 @@ export const Page1 = (props) => {
     e.preventDefault();
     for(let i=0; i<teamMembers.length;i++){
       let el = teamMembers[i];
+      if(el.name == '' || el.email == '' || el.phoneNum =='' || el.whatsappNum == '' || el.add1 =='')
+      {
+        alert("All fields are mandatory!!!");
+        return;
+      }
       if(el.pin.length != 6)
       {
         alert("Invalid PIN detected");
@@ -270,7 +275,9 @@ export const Page1 = (props) => {
                   <div key={"input of " + i} className="card w-75 mb-5">
                     <div className="d-flex inline-block">
                       <div className="mb-3 input-group">
-                      <span className="input-group-text">Name</span>
+                      <span className="input-group-text">Name
+                      <span style={{ color: "#dc3545" }}>*</span>
+                      </span>
                           <input
                           type="text"
                           placeholder="Enter Name"
@@ -282,7 +289,8 @@ export const Page1 = (props) => {
                         />
                       </div>
                       <div className="input-group mb-3">
-                      <span className="input-group-text">Email</span>
+                      <span className="input-group-text">Email
+                      <span style={{ color: "#dc3545" }}>*</span></span>
                         <input
                           type="email"
                           placeholder="Enter e-mail"
@@ -294,7 +302,8 @@ export const Page1 = (props) => {
                       </div>
                     </div>
                     <div className="input-group mb-3">
-                      <span className="input-group-text">Contact</span>
+                      <span className="input-group-text">Contact
+                      <span style={{ color: "#dc3545" }}>*</span></span>
                       <input
                         type="number"
                         maxLength={10}
@@ -317,7 +326,8 @@ export const Page1 = (props) => {
 
                     <div className="d-flex inline-block">
                       <div className="input-group w-25 mb-3">
-                        <span className="input-group-text">Class</span>
+                        <span className="input-group-text">Class
+                      <span style={{ color: "#dc3545" }}>*</span></span>
                         <select id={"standard-Selection"+i} className='form-control' onChange={(e) => {
                           member.standard = e.target.value;
                         }} placeholder="Standard">
@@ -333,7 +343,8 @@ export const Page1 = (props) => {
                         </select>
                       </div>
                       <div className="input-group mb-3">
-                        <span className="input-group-text">School</span>
+                        <span className="input-group-text">School
+                      <span style={{ color: "#dc3545" }}>*</span></span>
                         <input className="form-control" type="text" id={"inputSchool"+i} placeholder="School Name" onChange={e => member.school = e.target.value}/>
                       </div>
                     </div>
@@ -343,7 +354,8 @@ export const Page1 = (props) => {
                         <input type="text" className="form-control" id={"inputAdd1"+i} placeholder="House no, Lane, Area, Village/City" onChange={e => member.add1 = e.target.value}/>
                       </div>
                       <div className="input-group mb-3 w-35">
-                        <span className="input-group-text">PIN</span>
+                        <span className="input-group-text">PIN
+                      <span style={{ color: "#dc3545" }}>*</span></span>
                         <input type="int" maxLength={6} id={"inputPin"+i} className="form-control" onChange={(e) =>{
                           if(e.target.value.length == 6)
                           {

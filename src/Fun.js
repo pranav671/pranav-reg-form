@@ -67,11 +67,11 @@ const Fun = (args) => {
 
 
 
-  const verifyEmail = (e, i) => {
+  const verifyEmail = async (e, i) => {
     
 
     let OTP = '-1';
-    let res = axios
+    let res = await axios
       .get("/verifyEmail?email=" + teamMembers[i].email)
       .catch((err) => console.log(err));
     if(res.data)
