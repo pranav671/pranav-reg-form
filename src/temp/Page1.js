@@ -97,13 +97,14 @@ export const Page1 = (props) => {
   
   const loadNextPage = (e) => {
     e.preventDefault();
-    teamMembers.forEach(el => {
+    for(let i=0; i<teamMembers.length;i++){
+      let el = teamMembers[i];
       if(el.pin.length != 6)
       {
         alert("Invalid PIN detected");
         return;
       }
-    })
+    }
       let temp = { event: selectedEvent, cat: selectedCategory };
       props.onSave(teamMembers, temp);
       navigate("/continue");
@@ -137,9 +138,11 @@ export const Page1 = (props) => {
     return (
       <div className="container">
         <div className="appointment-header">Team Details</div>
-        <div className="d-inline-flex row">
+        <div className="d-inline-flex row ms-4">
           <EventDropDown />
+
           <CategoryDropDown />
+
           <TeamSizeDropDown />
         </div>
         <div>

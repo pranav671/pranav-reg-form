@@ -5,6 +5,7 @@ import Fun from "./Fun";
 import SelectGroup from "./components/select group";
 import { Page1 } from "./temp/Page1";
 import './temp/Style.css';
+import Exp from "./temp/exp";
 
 function App() {
   const [data, setData] = React.useState([]);
@@ -24,6 +25,7 @@ function App() {
         <Route path="/1" element={<SelectGroup data={data} onSave={saveData}/>} />
         {/* <Route path='/1' element={<Home data={data} onSave={saveData}/>}/> */}
         <Route path="/continue" element={<Fun data={data} info={info}/>} />
+        <Route path="/exp" element={<Exp text="Testing"/>}/>
       </Routes>
     </Router>
   );
