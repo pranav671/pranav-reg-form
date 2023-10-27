@@ -1,17 +1,22 @@
-import "bootstrap/dist/css/bootstrap.css";
-import "./temp/Style.css";
-import React, { useEffect, useReducer, useState } from "react";
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.css";
+import React, { useEffect, useState } from "react";
+import "./temp/Style.css";
 
 const Fun = (args) => {
   const [teamMembers, setTeamMembers] = useState(args.data);
   const event = args.info.event;
   const cat = args.info.cat;
-  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [ipt, setipt] = useState(10);
   const [id, setId] = useState("");
+  const [OTP, setOTP] = useState([-1,-1])
   const [paymentLink, setPaymentLink] = useState("Err");
-  const [emailPop, toggleEmailPop] = useState(false);
-
 
   const handleSubmission = async (e) => {
     e.preventDefault();
@@ -20,12 +25,17 @@ const Fun = (args) => {
     ];
     let payload = { members: args.data, info: info };
     // check for verification
-    teamMembers.forEach(element => {
-      if(!element.phoneVerified)
-      {
-        alert("Please complete the verification first!!!")
+    for (let i = 0; i < teamMembers.length; i++) {
+      let element = teamMembers[i];
+      if (!element.emailVerified) {
+        alert("Please complete the verification first!!!");
+        return;
       }
-    });
+      if (element.add2 == "Invalid PIN detected") {
+        alert("Please try again with a valid PIN code");
+        return;
+      }
+    }
     if (id != "") {
       axios
         .get("/newLink/" + id)
@@ -62,51 +72,112 @@ const Fun = (args) => {
     for (let i = 0; i < teamMembers.length; i++)
       document.getElementById("cityNstate" + i).value = teamMembers[i].add2;
 
-    forceUpdate();
   }, [teamMembers]);
 
-
-
+  
   const verifyEmail = async (e, i) => {
-    
-
-    let OTP = '-1';
+    handleOpenotpmodal();
     let res = await axios
       .get("/verifyEmail?email=" + teamMembers[i].email)
       .catch((err) => console.log(err));
-    if(res.data)
-      OTP = res.data
-    console.log(OTP," recieved")
-    let ip = prompt("Enter OTP sent to your E-mail.");
-    if(ip == OTP)
-    {
-      e.target.innerHTML = 'Verified';
-      e.target.disabled = true;
-      teamMembers[i].emailVerified = true;
-    }
+    if (res) setOTP([res.data, e.target.id]);
     else
-    {
-      alert("Invalid OTP");
-      e.target.innerHTML = 'Verify';
-    }
-
-    console.log(teamMembers[i]);
+      handleCloseotpmodal();
+    console.log(OTP, " recieved");
+    // let ip = prompt("Enter OTP sent to your E-mail.");
+    // if (ip == OTP) {
+    //   e.target.innerHTML = "Verified";
+    //   e.target.disabled = true;
+    //   teamMembers[i].emailVerified = true;
+    // } else {
+    //   alert("Invalid OTP");
+    //   e.target.innerHTML = "Verify";
+    // }
 
     // setemailTimeout([setTimeout((i) => resetEmailVerifyBtn(bool, i), 10000), i]);
-
   };
 
- 
 
-  const verifyPhone = (e,i) => {
+  const verifyPhone = (e, i) => {
     //Implement this
-    document.getElementById("emailOtp-btn"+i).disabled = false;
-    toggleEmailPop(false);
+    document.getElementById("emailOtp-btn" + i).disabled = false;
+    document.getElementById("emailOtp-btn" + i).innerHTML = "Verify";
+
   };
+  const [openOTPModal, setOpenotpmodal] = React.useState(false);
+    const handleOpenotpmodal = () => setOpenotpmodal(true);
+    const handleCloseotpmodal = () => setOpenotpmodal(false);
+
+    const style = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 400,
+      bgcolor: 'background.paper',
+      border: '2px solid #000',
+      boxShadow: 24,
+      p: 4,
+    };
 
   return (
     <>
-      <div className="container m-5 ">
+      <div>
+        {/* <Button onClick={handleOpenotpmodal}>Open modal</Button> */}
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={openOTPModal}
+          onClose={handleCloseotpmodal}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={openOTPModal}>
+            <Box sx={style}>
+              <Typography
+                id="transition-modal-title"
+                variant="h6"
+                component="h2"
+              >
+                Enter the OTP sent to you
+              </Typography>
+              <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                <input
+                  className="form-control w-50"
+                  id="OTPinput"
+                  onChange={(e) => setipt(e.target.value)}
+                  placeholder="OTP"
+                />
+                <button
+                  className="btn btn-primary mt-4"
+                  onClick={(e) => {
+                    if(ipt == OTP[0])
+                    {
+                      console.log("Success for id = ", OTP[1])
+                      let b = document.getElementById(OTP[1]);
+                      b.innerHTML="Verified";
+                      b.disabled=true;
+                      let s = OTP[1];
+                      s = parseInt(s.charAt(s.length-1))
+                      teamMembers[s].emailVerified=true;
+                      console.log(teamMembers[s]);
+                      handleCloseotpmodal()
+                    }
+                    else
+                      console.log("error ", OTP)
+                  }}
+                >
+                  Submit
+                </button>
+              </Typography>
+            </Box>
+          </Fade>
+        </Modal>
+      </div>  
+      <div className="container mt-5 ">
         <ul>
           {teamMembers.map((member, i) => {
             // console.log(id);
@@ -132,20 +203,25 @@ const Fun = (args) => {
                         value={member.email}
                         readOnly
                       />
-                        <button
-                          onClick={(e) => verifyEmail(e, i)}
-                          className="btn btn-outline-success"
-                          id={"emailOtp-btn" + i}
-                          type="button"
-                        >
-                          {/* {console.log(member)} */}
-                          Verify
-                        </button>
+                      {
+                      member.emailVerified? 
+                      <button disabled className='btn btn-outline-success' id={"emailOtp-btn" + i} type='button' onClick={(e) => verifyEmail(e, i)}>Verified</button>
+                      :
+                      <button
+                      onClick={(e) => verifyEmail(e, i)}
+                      className="btn btn-outline-success"
+                      id={"emailOtp-btn" + i}
+                      type="button"
+                    >
+                      {/* {console.log(member)} */}
+                      Verify
+                    </button>
+                      }
+                      
                     </div>
                   </div>
                   <div>
                     <div id="timer" className="h-50"></div>
-                    
                   </div>
                   <div className="input-group mb-3">
                     <span className="input-group-text">Contact No.</span>
@@ -162,15 +238,16 @@ const Fun = (args) => {
                       value={member.whatsappNum}
                       readOnly="true"
                     />
-                    <button
-                      onClick={(e) => verifyPhone(e, i)}
-                      className="btn btn-outline-success"
-                      type="button"
-                    >
-                      Verify
-                    </button>
+                  <button
+                        onClick={(e) => verifyPhone(e, i)}
+                        className="btn btn-outline-success"
+                        id={"phoneOtp-btn" + i}
+                        type="button"
+                      >
+                        {/* {console.log(member)} */}
+                        Verify
+                  </button>
                   </div>
-
                   <div className="d-flex inline-block">
                     <div className="input-group w-25 mb-3">
                       <span className="input-group-text">Class</span>
@@ -250,7 +327,6 @@ const Fun = (args) => {
           </div>
         )}
       </div>
-
     </>
   );
 };

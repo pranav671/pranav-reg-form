@@ -1,7 +1,7 @@
 .form-select {
     padding: 10px;
     display: block;
-    width: 100%;
+    width: 18vw;
     font-size: 12px;
     font-weight: 400;
     line-height: 1.5;
@@ -19,14 +19,14 @@
 }
 
 .standard-select {
-    width: 10vh;
+    width: 14vw;
 }
 
 body {
     font-family: open_sansregular,Helvetica,Arial,sans-serif!important;
     color: #000000!important;
     height: 100%;
-    font-size: 12px;
+    font-size: 14px;
     background-color: #ffffff!important;
     font-weight: 400;
     align-items: center;
@@ -37,7 +37,7 @@ body {
     color: #000;
     justify-content: center;
     align-items: center;
-    padding-left: 20vh;
+    margin-inline: 15vw;
 }
 
 .form {
@@ -70,7 +70,7 @@ body {
 }
 .dropdownContainer {
     margin-top: 20px;
-    width: 18vw;
+    width: 21vw;
 }
 .navbar {
     background-color: #f9f8f7;
@@ -121,7 +121,7 @@ body {
     vertical-align: bottom;
 }
 .card{
-    background-color: #ffffff;
+    background-color: #fdfbfd;
 }
 
 .w-35 {

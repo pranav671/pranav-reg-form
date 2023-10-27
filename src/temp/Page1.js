@@ -26,27 +26,7 @@ export const Page1 = (props) => {
 
     for(let i=0; i<teamMembers.length; i++)
     {
-      // const getCity = async () => {
       
-      //   for(let i=0; i<teamMembers.length; i++)
-      //   {
-      //     if(teamMembers[i].pin.length != 6)
-      //       continue;
-      //     const result = await fetch ('https://api.postalpincode.in/pincode/'+teamMembers[i].pin);
-      //     result.json().then( json =>{
-      //       console.log("fetched for"+i);
-      //       if(json[0].Status == 'Success'){
-      //         let str = json[0].PostOffice[0].Block+", "+json[0].PostOffice[0].District+", "+json[0].PostOffice[0].State+", India."
-      //         teamMembers[i].add2 = str
-      //         document.getElementById("inputAdd2"+i).value = str;
-      //       }
-      //       else  
-      //       teamMembers[i].add2 = "Invalid PIN detected"
-      //     }
-      //     )
-      //   }
-      // }
-      // getCity().then(()=> {
           try
           {
             document.getElementById("inputName"+i).value = teamMembers[i].name;
@@ -63,7 +43,6 @@ export const Page1 = (props) => {
             // console.log("Error",err)
           }
           
-      //   })
       }
     }, [pinArr])
 
@@ -102,6 +81,11 @@ export const Page1 = (props) => {
       if(el.name == '' || el.email == '' || el.phoneNum =='' || el.whatsappNum == '' || el.add1 =='')
       {
         alert("All fields are mandatory!!!");
+        return;
+      }
+      if(el.phoneNum.length != 10 || el.whatsappNum.length != 10)
+      {
+        alert("Please enter a valid number");
         return;
       }
       if(el.pin.length != 6)
@@ -143,7 +127,7 @@ export const Page1 = (props) => {
     return (
       <div className="container">
         <div className="appointment-header">Team Details</div>
-        <div className="d-inline-flex row ms-4">
+        <div className="d-inline-flex row mx-3">
           <EventDropDown />
 
           <CategoryDropDown />
@@ -191,20 +175,19 @@ export const Page1 = (props) => {
           <select
             id="categoryDrop"
             className="form-select"
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-            }}
+            onChange={e => setSelectedCategory(e.target.value)}
             disabled={selectedTeamSize != "Select Team Size"}
             placeholder="Select Category"
           >
             <option selected>{selectedCategory}</option>
-            {Object.keys(categories).map((ob, ind) => {
-              return (
-                ob != selectedCategory && (
-                  <option key={ind + "category"}>{ob}</option>
-                )
-              );
-            })}
+                    {
+                      Object.keys(categories).map((ob, ind) => {
+                        return (
+                          ob != selectedCategory && (
+                            <option key={ind + "category"}>{ob}</option>
+                          )
+                        );
+                    })}
           </select>
         </div>
       );
@@ -214,7 +197,7 @@ export const Page1 = (props) => {
   const TeamSizeDropDown = () => {
     if (selectedCategory && selectedCategory != "Select Category") {
       return (
-        <div className=" dropdownContainer">
+        <div className="form-spacing dropdownContainer">
           <label htmlFor="teamDrop">
             <a>Select Team Size</a>
             <span style={{ color: "#dc3545" }}>*</span>
@@ -231,7 +214,7 @@ export const Page1 = (props) => {
                   email: "",
                   phoneNum: "",
                   whatsappNum: "",
-                  standard:'',
+                  standard:'I',
                   school: '',
                   pin:'',
                   add1: '',
@@ -268,7 +251,7 @@ export const Page1 = (props) => {
     ) {
       return (
         <div>
-          <ol>
+          <ul>
             {teamMembers.map((member, i) => {
               return (
                 <li>
@@ -375,7 +358,7 @@ export const Page1 = (props) => {
                 </li>
               );
             })}
-          </ol>
+          </ul>
 
           <div className="text-center w-75">
             <button

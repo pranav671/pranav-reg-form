@@ -1,11 +1,10 @@
-import * as React from 'react';
+import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Backdrop from '@mui/material/Backdrop';
 import Fade from '@mui/material/Fade';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { Toast } from 'bootstrap';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 
 const style = {
     position: 'absolute',
@@ -33,10 +32,10 @@ export default function Exp() {
         open={open}
         onClose={handleClose}
         closeAfterTransition
-        // BackdropComponent={Backdrop}
-        // BackdropProps={{
-        //   timeout: 500,
-        // }}
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
       >
         <Fade in={open}>
           <Box sx={style}>
