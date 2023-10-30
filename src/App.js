@@ -7,7 +7,11 @@ import { Page1 } from "./temp/Page1";
 import './temp/Style.css';
 import Exp from "./temp/exp";
 
-function App() {
+
+export  const server_url = "http://51.20.101.214:8080";
+
+
+export default function App() {
   const [data, setData] = React.useState([]);
   const [info, setInfo] = React.useState({'event':'','cat':''});
   
@@ -30,4 +34,3 @@ function App() {
     </Router>
   );
 }
-export default App;

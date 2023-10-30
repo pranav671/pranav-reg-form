@@ -3,7 +3,11 @@ const { createProxyMiddleware } = require("http-proxy-middleware")
 module.exports = app => {
     app.use(
         createProxyMiddleware("/newEntry"), {
-            target : 'http://192.168.0.163:8080',
+            target : 'http://51.20.101.214:8080',
+            changeOrigin : true
+        },
+        createProxyMiddleware("/verifyEmail"), {
+            target : 'http://51.20.101.214:8080',
             changeOrigin : true
         }
     )

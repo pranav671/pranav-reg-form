@@ -1,12 +1,12 @@
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.css";
 import React, { useEffect, useState } from "react";
+import {server_url} from './App'
 import "./temp/Style.css";
 
 const Fun = (args) => {
@@ -38,7 +38,7 @@ const Fun = (args) => {
     }
     if (id != "") {
       axios
-        .get("/newLink/" + id)
+        .get(server_url+"/newLink/" + id)
         .then((response) => {
           console.log(response);
           let links = String(response.data);
@@ -54,7 +54,7 @@ const Fun = (args) => {
     }
     // eslint-disable-next-line no-restricted-globals
     axios
-      .post("/newEntry", payload)
+      .post(server_url+"/newEntry", payload)
       .then((response) => {
         console.log(response);
         let links = String(response.data);
@@ -78,7 +78,7 @@ const Fun = (args) => {
   const verifyEmail = async (e, i) => {
     handleOpenotpmodal();
     let res = await axios
-      .get("/verifyEmail?email=" + teamMembers[i].email)
+      .get(server_url+"/verifyEmail?email=" + teamMembers[i].email)
       .catch((err) => console.log(err));
     if (res) setOTP([res.data, e.target.id]);
     else
@@ -167,7 +167,7 @@ const Fun = (args) => {
                       handleCloseotpmodal()
                     }
                     else
-                      console.log("error ", OTP)
+                      alert("Invalid OTP! Try again.")
                   }}
                 >
                   Submit
