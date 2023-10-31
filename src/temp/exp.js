@@ -1,58 +1,83 @@
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Fade from '@mui/material/Fade';
-import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
-import * as React from 'react';
+import * as React from "react";
+import "bootstrap/dist/css/bootstrap.css";
+import "./Style.css";
+import axios from "axios";
+import { server_url } from "../App";
+import {useParams } from "react-router-dom";
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-  
-export default function Exp() {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+export default function Exp(args) {
 
+  const [data, setData] = React.useState(null);
+
+  React.useEffect(() => {
+    if(data == null)
+    {
+      let res = {
+        "name" : "User Name",
+        "email" : "username@serviceprovider.isp",
+        "school" : "Saint Tams Multi--Medium Public School",
+        "std" : "IX",
+        "add" : "House, Lane, Gully, Nagar, Village, City, State, India, PIN-XXXXXX.",
+        "phone" : "+91-963085241",
+        "whats" : "+91-654129875"
+      }
+      setData(res)
+    }
+    else
+    {
+      console.log("loaded")
+    }
+  }, [data])
+
+  let {id} = useParams()
   return (
-    <div style={{margin: '25%'}}>
-      <Button onClick={handleOpen}>Open modal</Button>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
+    data && 
+    (<div style={{ color: "black", marginInline: "auto" }}>
+      <div
+        className="w-80"
+        style={{ alignItems: "center", marginInline: "auto" }}
       >
-        <Fade in={open}>
-          <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
-              Enter the OTP sent to youe e-mail
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              <input className='form-control w-50' id='OTPinput' placeholder='OTP'/>
-              <button className='btn btn-primary mt-4' onClick={(e)=> {
-                let ip = document.getElementById('OTPinput').value;
-                if(ip < 400000)
-                    console.log("first")
-              }}>Submit</button>
-            </Typography>
-          </Box>
-        </Fade>
-      </Modal>
-    </div>
+        <h5 className="mt-5 ms-5">Event = Event</h5>
+        <h5 className="mt-3 ms-5">Category = category</h5>
+        <h5 className="mt-3 ms-5">Payment status = Successful</h5>
+        <p className="mt-3 ms-5">
+          Payment Link = <a>https://anywhere.net</a>
+        </p>
+        <p className="mt-2 ms-5">Application Id = {id}</p>
+        <div className="card w-65 mx-3 ms-5" style={{ textAlign: "left" }}>
+          <Card data={data} />
+        </div>
+      </div>
+    </div>)
   );
 }
+
+/**
+ *
+ * name
+ * shcloo
+ * add
+ * email
+ * num
+ */
+
+const Card = (props) => {
+  let data = props.data;
+  return (
+    <div className="card-body ps-5">
+      <p>Name : {data.name}</p>
+      <p>
+        School = {data.school}
+        <a className="user-select-none" style={{ color: "#fbfbfb" }}>- - - - -{" "}</a>
+        Std - {data.std}
+      </p>
+      <p>Address - {data.add}</p>
+      <div className="d-inline-flex">
+        <a>Email : {data.email}<i className="bi bi-patch-check-fill"></i></a>
+        <span style={{ color: "white", marginLeft: "6vw" }}></span>
+        <p>Phone no : {data.phone} </p>
+      </div>
+      <p>WhatsApp no : {data.whats} </p>
+    </div>
+  );
+};

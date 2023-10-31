@@ -2,7 +2,6 @@
   "name": "form",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://51.20.101.214:8080",
   "homepage": "http://localhost:3000",
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -14,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.1",
     "browser-router": "^0.2.0",
     "cors": "^2.8.5",
     "create-react-app": "^5.0.1",

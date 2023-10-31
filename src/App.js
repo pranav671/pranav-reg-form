@@ -26,10 +26,10 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Page1 onSave={saveData}/>} />
-        <Route path="/1" element={<SelectGroup data={data} onSave={saveData}/>} />
+        {/* <Route path="/1" element={<SelectGroup data={data} onSave={saveData}/>} /> */}
         {/* <Route path='/1' element={<Home data={data} onSave={saveData}/>}/> */}
         <Route path="/continue" element={<Fun data={data} info={info}/>} />
-        <Route path="/exp" element={<Exp text="Testing"/>}/>
+        <Route path="/exp/:id" element={<Exp text="Testing"/>}/>
       </Routes>
     </Router>
   );

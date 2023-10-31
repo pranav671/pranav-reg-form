@@ -328,6 +328,12 @@ const Fun = (args) => {
         )}
       </div>
     </>
+    // :
+    // <>
+    //   <div className='Container m-5 p-5'>
+    //   <a href="/" className='text-center'>Fill out the registration form</a>
+    //   </div>
+    // </>
   );
 };
 
