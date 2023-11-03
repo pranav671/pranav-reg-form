@@ -1,11 +1,11 @@
 import * as React from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import "./Style.css";
+import "./temp/Style.css";
 import axios from "axios";
-import { server_url } from "../App";
+import { server_url } from "./App";
 import {useParams } from "react-router-dom";
 
-export default function Exp(args) {
+export default function Details(props) {
 
   const [data, setData] = React.useState(null);
   const [code, setCode]= React.useState('');
@@ -24,6 +24,22 @@ export default function Exp(args) {
       return;
     }
   }, [data])
+
+  const generateLink = () => {
+    axios.get(server_url+"/newLink/"+data.id)
+            .then(res => {
+                let links = String(res.data);
+                let payment_url = links.split(", ")[1];
+                console.log(res)
+                data.paymentUrl = payment_url;
+                setCode("siomeb")
+            
+            })
+            .catch(err => {
+                alert("Error creating payment Link!!!\nTry again.")
+            })
+            ;
+  }
 
   let {id} = useParams()
 
@@ -45,13 +61,17 @@ export default function Exp(args) {
         <h5 className="mt-3 ms-5">Category = {data.category}</h5>
         <h5 className="mt-3 ms-5">Payment status = {data.hasPaid ? "Successful" : "Pending"}</h5>
         <p className="mt-3 ms-5">
-          Payment Link = <a href={data.paymentUrl} className="link-danger">{data.paymentUrl}</a>
+        Payment Link = 
+          {(data.paymentUrl == null || data.paymentUrl=='error') ? <button className="btn btn-outline-success ms-2" onClick={generateLink}>Generate</button>
+          :
+          <a href={data.paymentUrl} className="link-danger">{data.paymentUrl}</a>
+        }
         </p>
         <p className="mt-2 ms-5">Application Id = {data.id}</p>
         {
           data.members.map((el, i) => {
-            {console.log(el)}
-            return ( <div className="card w-65 my-3 ms-5" key={i+"card"} style={{ textAlign: "left" }}>
+            // {console.log(el)}
+            return ( <div className="card w-65 my-4 ms-5" key={i+"card"} style={{ textAlign: "left" }}>
               <Card data={el} />
             </div>)
             })
@@ -82,7 +102,7 @@ const Card = (props) => {
         <a className="user-select-none" style={{ color: "#fbfbfb" }}>- - - - -{" "}</a>
         Std - {data.standard}
       </p>
-      <p>Address - {data.add1}</p>
+      <p>Address - {data.add1+" "+data.add2}</p>
       <div className="d-inline-flex">
         <a>Email : {data.email}<i className="bi bi-patch-check-fill"></i></a>
         <span style={{ color: "white", marginLeft: "6vw" }}></span>

@@ -322,7 +322,7 @@ const Fun = (args) => {
               </a>
             )}
             {id !== "" && (
-              <p>You can track your application details with Id = {id}</p>
+              <p>You can track your application details <a href={'/exp/'+id}>here</a></p>
             )}
           </div>
         )}

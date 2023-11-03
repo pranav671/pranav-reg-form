@@ -6,9 +6,10 @@ import SelectGroup from "./components/select group";
 import { Page1 } from "./temp/Page1";
 import './temp/Style.css';
 import Exp from "./temp/exp";
+import Details from "./Details";
 
 
-export  const server_url = "http://51.20.101.214:8080";
+export  const server_url = "http://192.168.0.163:8080";  // AWS EC2 IP Address
 
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
         {/* <Route path='/1' element={<Home data={data} onSave={saveData}/>}/> */}
         <Route path="/continue" element={<Fun data={data} info={info}/>} />
         <Route path="/exp/:id" element={<Exp text="Testing"/>}/>
+        <Route path="/applications/:id" element={<Details/>}/>
       </Routes>
     </Router>
   );
