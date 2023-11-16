@@ -1,6 +1,6 @@
 import * as React from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import "./Style.css";
+import "../components/Style.css";
 import axios from "axios";
 import { server_url } from "../App";
 import {useParams } from "react-router-dom";

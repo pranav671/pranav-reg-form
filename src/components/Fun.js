@@ -1,13 +1,13 @@
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Fade from '@mui/material/Fade';
-import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
+import Backdrop from "@mui/material/Backdrop";
+import Box from "@mui/material/Box";
+import Fade from "@mui/material/Fade";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.css";
 import React, { useEffect, useState } from "react";
-import {server_url} from './App'
-import "./temp/Style.css";
+import { server_url } from "../App";
+import "./Style.css";
 
 const Fun = (args) => {
   const [teamMembers, setTeamMembers] = useState(args.data);
@@ -15,7 +15,7 @@ const Fun = (args) => {
   const cat = args.info.cat;
   const [ipt, setipt] = useState(10);
   const [id, setId] = useState("");
-  const [OTP, setOTP] = useState([-1,-1])
+  const [OTP, setOTP] = useState([-1, -1]);
   const [paymentLink, setPaymentLink] = useState("Err");
 
   const handleSubmission = async (e) => {
@@ -27,6 +27,7 @@ const Fun = (args) => {
     // check for verification
     for (let i = 0; i < teamMembers.length; i++) {
       let element = teamMembers[i];
+      // check for phone after implementing it in the backend
       if (!element.emailVerified) {
         alert("Please complete the verification first!!!");
         return;
@@ -38,9 +39,9 @@ const Fun = (args) => {
     }
     if (id != "") {
       axios
-        .get(server_url+"/newLink/" + id)
+        .get(server_url + "/newLink/" + id)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           let links = String(response.data);
           let payment_url = links.split(", ")[1];
           if (payment_url === "error") {
@@ -52,11 +53,10 @@ const Fun = (args) => {
         .catch((err) => console.log(err));
       return;
     }
-    // eslint-disable-next-line no-restricted-globals
     axios
-      .post(server_url+"/newEntry", payload)
+      .post(server_url + "/newEntry", payload)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         let links = String(response.data);
         let payment_url = links.split(", ")[1];
         if (payment_url === "error") {
@@ -71,59 +71,40 @@ const Fun = (args) => {
   useEffect(() => {
     for (let i = 0; i < teamMembers.length; i++)
       document.getElementById("cityNstate" + i).value = teamMembers[i].add2;
-
   }, [teamMembers]);
 
-  
   const verifyEmail = async (e, i) => {
     handleOpenotpmodal();
     let res = await axios
-      .get(server_url+"/verifyEmail?email=" + teamMembers[i].email)
+      .get(server_url + "/verifyEmail?email=" + teamMembers[i].email)
       .catch((err) => console.log(err));
     if (res) setOTP([res.data, e.target.id]);
-    else
-      handleCloseotpmodal();
-    console.log(OTP, " recieved");
-    // let ip = prompt("Enter OTP sent to your E-mail.");
-    // if (ip == OTP) {
-    //   e.target.innerHTML = "Verified";
-    //   e.target.disabled = true;
-    //   teamMembers[i].emailVerified = true;
-    // } else {
-    //   alert("Invalid OTP");
-    //   e.target.innerHTML = "Verify";
-    // }
-
-    // setemailTimeout([setTimeout((i) => resetEmailVerifyBtn(bool, i), 10000), i]);
+    else handleCloseotpmodal();
+    // console.log(OTP, " recieved");
   };
-
 
   const verifyPhone = (e, i) => {
     //Implement this
-    document.getElementById("emailOtp-btn" + i).disabled = false;
-    document.getElementById("emailOtp-btn" + i).innerHTML = "Verify";
-
   };
   const [openOTPModal, setOpenotpmodal] = React.useState(false);
-    const handleOpenotpmodal = () => setOpenotpmodal(true);
-    const handleCloseotpmodal = () => setOpenotpmodal(false);
+  const handleOpenotpmodal = () => setOpenotpmodal(true);
+  const handleCloseotpmodal = () => setOpenotpmodal(false);
 
-    const style = {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: 400,
-      bgcolor: 'background.paper',
-      border: '2px solid #000',
-      boxShadow: 24,
-      p: 4,
-    };
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <>
       <div>
-        {/* <Button onClick={handleOpenotpmodal}>Open modal</Button> */}
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
@@ -154,20 +135,17 @@ const Fun = (args) => {
                 <button
                   className="btn btn-primary mt-4"
                   onClick={(e) => {
-                    if(ipt == OTP[0])
-                    {
-                      console.log("Success for id = ", OTP[1])
+                    if (ipt == OTP[0]) {
+                      // console.log("Success for id = ", OTP[1]);
                       let b = document.getElementById(OTP[1]);
-                      b.innerHTML="Verified";
-                      b.disabled=true;
+                      b.innerHTML = "Verified";
+                      b.disabled = true;
                       let s = OTP[1];
-                      s = parseInt(s.charAt(s.length-1))
-                      teamMembers[s].emailVerified=true;
-                      console.log(teamMembers[s]);
-                      handleCloseotpmodal()
-                    }
-                    else
-                      alert("Invalid OTP! Try again.")
+                      s = parseInt(s.charAt(s.length - 1));
+                      teamMembers[s].emailVerified = true;
+                      // console.log(teamMembers[s]);
+                      handleCloseotpmodal();
+                    } else alert("Invalid OTP! Try again.");
                   }}
                 >
                   Submit
@@ -176,11 +154,10 @@ const Fun = (args) => {
             </Box>
           </Fade>
         </Modal>
-      </div>  
+      </div>
       <div className="container mt-5 ">
         <ul>
           {teamMembers.map((member, i) => {
-            // console.log(id);
             return (
               <li>
                 <div key={"input of " + i} className="card w-80 mb-5">
@@ -203,21 +180,26 @@ const Fun = (args) => {
                         value={member.email}
                         readOnly
                       />
-                      {
-                      member.emailVerified? 
-                      <button disabled className='btn btn-outline-success' id={"emailOtp-btn" + i} type='button' onClick={(e) => verifyEmail(e, i)}>Verified</button>
-                      :
-                      <button
-                      onClick={(e) => verifyEmail(e, i)}
-                      className="btn btn-outline-success"
-                      id={"emailOtp-btn" + i}
-                      type="button"
-                    >
-                      {/* {console.log(member)} */}
-                      Verify
-                    </button>
-                      }
-                      
+                      {member.emailVerified ? (
+                        <button
+                          disabled
+                          className="btn btn-outline-success"
+                          id={"emailOtp-btn" + i}
+                          type="button"
+                          onClick={(e) => verifyEmail(e, i)}
+                        >
+                          Verified
+                        </button>
+                      ) : (
+                        <button
+                          onClick={(e) => verifyEmail(e, i)}
+                          className="btn btn-outline-success"
+                          id={"emailOtp-btn" + i}
+                          type="button"
+                        >
+                          Verify
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div>
@@ -238,15 +220,14 @@ const Fun = (args) => {
                       value={member.whatsappNum}
                       readOnly="true"
                     />
-                  <button
-                        onClick={(e) => verifyPhone(e, i)}
-                        className="btn btn-outline-success"
-                        id={"phoneOtp-btn" + i}
-                        type="button"
-                      >
-                        {/* {console.log(member)} */}
-                        Verify
-                  </button>
+                    <button
+                      onClick={(e) => verifyPhone(e, i)}
+                      className="btn btn-outline-success"
+                      id={"phoneOtp-btn" + i}
+                      type="button"
+                    >
+                      Verify
+                    </button>
                   </div>
                   <div className="d-flex inline-block">
                     <div className="input-group w-25 mb-3">
@@ -321,19 +302,14 @@ const Fun = (args) => {
                 Proceed to payment
               </a>
             )}
-            {id !== "" && (
+            {/* {id !== "" && (
               <p>You can track your application details <a href={'/exp/'+id}>here</a></p>
-            )}
+            )} */}
           </div>
         )}
       </div>
     </>
-    // :
-    // <>
-    //   <div className='Container m-5 p-5'>
-    //   <a href="/" className='text-center'>Fill out the registration form</a>
-    //   </div>
-    // </>
+    
   );
 };
 

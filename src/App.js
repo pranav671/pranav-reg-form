@@ -1,15 +1,15 @@
 import React from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
-import Fun from "./Fun";
-import SelectGroup from "./components/select group";
-import { Page1 } from "./temp/Page1";
-import './temp/Style.css';
+import Fun from "./components/Fun";
+import { Page1 } from "./components/Page1";
+import './components/Style.css';
 import Exp from "./temp/exp";
-import Details from "./Details";
+import Details from "./components/Details";
 
 
-export  const server_url = "http://192.168.0.163:8080";  // AWS EC2 IP Address
+// export  const server_url = "http://192.168.0.163:8080";
+export const server_url = "http://my-app-env-2.eba-ni8tqtmu.eu-north-1.elasticbeanstalk.com";
 
 
 export default function App() {
@@ -27,10 +27,8 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Page1 onSave={saveData}/>} />
-        {/* <Route path="/1" element={<SelectGroup data={data} onSave={saveData}/>} /> */}
-        {/* <Route path='/1' element={<Home data={data} onSave={saveData}/>}/> */}
         <Route path="/continue" element={<Fun data={data} info={info}/>} />
-        <Route path="/exp/:id" element={<Exp text="Testing"/>}/>
+        <Route path="/exp/:id" element={<Exp text="Testing"/>}/> {/*for testing extrafeatures*/}
         <Route path="/applications/:id" element={<Details/>}/>
       </Routes>
     </Router>
