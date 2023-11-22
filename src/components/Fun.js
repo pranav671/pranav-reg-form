@@ -8,15 +8,19 @@ import "bootstrap/dist/css/bootstrap.css";
 import React, { useEffect, useState } from "react";
 import { server_url } from "../App";
 import "./Style.css";
+import { useNavigate } from "react-router-dom";
 
 const Fun = (args) => {
   const [teamMembers, setTeamMembers] = useState(args.data);
   const event = args.info.event;
   const cat = args.info.cat;
+  const [editor, setEditor] = useState(true);
   const [ipt, setipt] = useState(10);
   const [id, setId] = useState("");
   const [OTP, setOTP] = useState([-1, -1]);
   const [paymentLink, setPaymentLink] = useState("Err");
+
+  const navigate = useNavigate();
 
   const handleSubmission = async (e) => {
     e.preventDefault();
@@ -90,6 +94,11 @@ const Fun = (args) => {
   const handleOpenotpmodal = () => setOpenotpmodal(true);
   const handleCloseotpmodal = () => setOpenotpmodal(false);
 
+  const goBack = () => {
+    navigate('/');
+  }
+
+ 
   const style = {
     position: "absolute",
     top: "50%",
@@ -155,8 +164,16 @@ const Fun = (args) => {
           </Fade>
         </Modal>
       </div>
-      <div className="container mt-5 ">
-        <ul>
+      <div className="container mt-5 " style={{"font-family": 'Playfair Display'}}>
+        <div className="mx-4" >
+        <div className="mb-4 ps-2">
+          <h2>Event = {event}</h2>
+        </div>
+        <div className="ps-2 mb-5">
+          <h2>Category = {cat}</h2>
+        </div>
+        </div>
+        <ol>
           {teamMembers.map((member, i) => {
             return (
               <li>
@@ -168,7 +185,7 @@ const Fun = (args) => {
                         type="text"
                         className="form-control w-60"
                         value={member.name}
-                        readOnly="true"
+                        readOnly={editor}
                       />
                     </div>
 
@@ -178,7 +195,7 @@ const Fun = (args) => {
                         type="email"
                         className="form-control"
                         value={member.email}
-                        readOnly
+                        readOnly={editor}
                       />
                       {member.emailVerified ? (
                         <button
@@ -211,14 +228,14 @@ const Fun = (args) => {
                       type="number"
                       className="form-control"
                       value={member.phoneNum}
-                      readOnly="true"
+                      readOnly={editor}
                     />
                     <input
                       required
                       type="number"
                       className="form-control"
                       value={member.whatsappNum}
-                      readOnly="true"
+                      readOnly={editor}
                     />
                     <button
                       onClick={(e) => verifyPhone(e, i)}
@@ -235,7 +252,7 @@ const Fun = (args) => {
                       <input
                         type="text"
                         className="form-control"
-                        readOnly="true"
+                        readOnly={editor}
                         value={member.standard}
                       />
                     </div>
@@ -245,7 +262,7 @@ const Fun = (args) => {
                         className="form-control"
                         type="text"
                         value={member.school}
-                        readOnly="true"
+                        readOnly={editor}
                       />
                     </div>
                   </div>
@@ -256,7 +273,7 @@ const Fun = (args) => {
                         type="text"
                         className="form-control"
                         value={member.add1}
-                        readOnly="true"
+                        readOnly={editor}
                       />
                     </div>
                     <div className="input-group mb-3 w-35">
@@ -265,7 +282,7 @@ const Fun = (args) => {
                         type="int"
                         maxLength={6}
                         className="form-control"
-                        readOnly="true"
+                        readOnly={editor}
                         value={member.pin}
                       />
                     </div>
@@ -286,10 +303,13 @@ const Fun = (args) => {
               </li>
             );
           })}
-        </ul>
+        </ol>
         {teamMembers.length > 0 && (
           <div className="text-center w-80">
             <br />
+            <button className="btn btn-outline-secondary mx-5"  onClick={goBack}>
+              Edit
+            </button>
             {paymentLink === "Err" ? (
               <button
                 className="btn btn-outline-primary"
@@ -298,7 +318,7 @@ const Fun = (args) => {
                 Load Payment Link
               </button>
             ) : (
-              <a href={paymentLink} target="_blank" className="btn btn-success">
+              <a href={paymentLink} className="btn btn-success">
                 Proceed to payment
               </a>
             )}

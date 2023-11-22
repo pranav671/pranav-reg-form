@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.gitignore
+
+#Mongo Data API key = "io5GkmiqCqqb8NWzNIiqY20kcsBKTu68bvM1eChmk8bKjOk3QdEEhsUWCi1GIczZ"

@@ -4,13 +4,43 @@ import React, { useEffect, useState } from "react";
 import "react-dropdown/style.css";
 import { useNavigate } from "react-router-dom";
 import "./Style.css";
+import axios from "axios";
 
 export const Page1 = (props) => {
-  const [events, setEvents] = useState({
-    "Robotics Premier League": 2,
-    "Geek Gala": 5,
-    "S.T.E.A.M. Workshops": 1,
-  });
+  const [events, setEvents] = useState([]
+    // {
+    // "Robotics Premier League": 2,
+    // "Geek Gala" : 5,
+    // "S.T.E.A.M. Workshops": 1,
+    // }
+  );
+
+  const options = [{"_id":"655d995298bce80e516c9a53","event":"Robotics Premier League","categories":["RoboSoccer (Wired)","RoboSoccer (Wireless)","RoboRacer (Wired)","RoboRacer (Wireless)","Line Follower"],"limit":2},{"_id":"655d9a1098bce80e516c9a54","event":"Geek Gala","categories":["Geek Gala"],"limit":5},{"_id":"655d9a4698bce80e516c9a55","event":"S.T.E.A.M. Workshops","categories":["Workshop 1","Workshop 2","Workshop 3"],"limit":1}];
+
+  // const options = await axios.get('https://us-east-1.aws.data.mongodb-api.com/app/list-options-grvqr/endpoint/options')
+  //   .catch(err => {});
+  // const events =[];
+
+
+  //funtion will be called only on the first render
+  useEffect(()=>{
+    let temp=[];
+    options.forEach((op)=>{
+      temp.push(op.event);
+    })
+    setEvents(temp);
+    // console.log(events);
+  }, [])
+
+  const getSize = (event) => {
+      for(let i=0; i<options.length; i++)
+      {
+        if(options[i].event == event)
+          return options[i].limit;
+      }
+  }
+
+
   const classList = [
     "I",
     "II",
@@ -26,10 +56,10 @@ export const Page1 = (props) => {
     "XII",
   ];
   const [categories, setCategories] = useState({});
-  const [selectedEvent, setSelectedEvent] = useState("Select Event");
-  const [selectedCategory, setSelectedCategory] = useState("Select Category");
-  const [selectedTeamSize, setSelectedTeamSize] = useState("Select Team Size");
-  const [teamMembers, setTeamMembers] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(props.info.event);
+  const [selectedCategory, setSelectedCategory] = useState(props.info.cat);
+  const [selectedTeamSize, setSelectedTeamSize] = useState(props.info.len);
+  const [teamMembers, setTeamMembers] = useState(props.members);
   const [pinArr, setPinarr] = useState([]);
 
   useEffect(() => {
@@ -38,12 +68,9 @@ export const Page1 = (props) => {
       try {
         document.getElementById("inputName" + i).value = teamMembers[i].name;
         document.getElementById("inputEmail" + i).value = teamMembers[i].email;
-        document.getElementById("inputPhone" + i).value =
-          teamMembers[i].phoneNum;
-        document.getElementById("inputWhatsapp" + i).value =
-          teamMembers[i].whatsappNum;
-        document.getElementById("inputSchool" + i).value =
-          teamMembers[i].school;
+        document.getElementById("inputPhone" + i).value = teamMembers[i].phoneNum;
+        document.getElementById("inputWhatsapp" + i).value = teamMembers[i].whatsappNum;
+        document.getElementById("inputSchool" + i).value = teamMembers[i].school;
         document.getElementById("inputAdd1" + i).value = teamMembers[i].add1;
         document.getElementById("inputAdd2" + i).value = teamMembers[i].add2;
         document.getElementById("inputPin" + i).value = teamMembers[i].pin;
@@ -51,7 +78,7 @@ export const Page1 = (props) => {
         // console.log("Error",err)
       }
     }
-  }, [pinArr]);
+  }, [pinArr,  selectedTeamSize]);
 
   const loadAddressFromPin = (s, i) => {
     const getCity = async (s, i) => {
@@ -99,7 +126,7 @@ export const Page1 = (props) => {
         return;
       }
     }
-    let temp = { event: selectedEvent, cat: selectedCategory };
+    let temp = { event: selectedEvent, cat: selectedCategory, len : teamMembers.length};
     props.onSave(teamMembers, temp);
     navigate("/continue");
   };
@@ -107,23 +134,10 @@ export const Page1 = (props) => {
   const handleEventChange = (e) => {
     let event = String(e.target.value);
     setSelectedEvent(event);
-    if (event === "Robotics Premier League") {
-      setCategories({
-        "Robo-Soccer (Wired)": 0,
-        "Robo-Soccer (Wireless)": 1,
-        "Robo-Racer (Wired)": 2,
-        "Robo-Raced (Wireless)": 3,
-        "Line Follower": 4,
-      });
-    }
-    if (event === "Geek Gala") setCategories({ "Geek Gala": 10 });
-    if (event === "S.T.E.A.M. Workshops") {
-      setCategories({
-        //TODO: list of workshops to be rendered
-        "Workshop 1": 21,
-        "Workshop 2": 22,
-      });
-    }
+    options.forEach(op => {
+      if(op.event == event)
+        setCategories(op.categories);
+    })
   };
 
   const Content = () => {
@@ -157,7 +171,7 @@ export const Page1 = (props) => {
           placeholder="Select Event"
         >
           <option selected>{selectedEvent}</option>
-          {Object.keys(events).map((ob, ind) => {
+          {events.map((ob, ind) => {
             return ob !== selectedEvent && <option key={ind}>{ob}</option>;
           })}
         </select>
@@ -181,7 +195,7 @@ export const Page1 = (props) => {
             placeholder="Select Category"
           >
             <option selected>{selectedCategory}</option>
-            {Object.keys(categories).map((ob, ind) => {
+            {categories.map((ob, ind) => {
               return (
                 ob != selectedCategory && (
                   <option key={ind + "category"}>{ob}</option>
@@ -230,7 +244,7 @@ export const Page1 = (props) => {
             placeholder="Select Event"
           >
             <option selected>{selectedTeamSize}</option>
-            {[...Array(events[selectedEvent])].map((ob, ind) => {
+            {[...Array(getSize(selectedEvent))].map((ob, ind) => {
               if (ind + 1 != selectedTeamSize)
                 return <option key={ind + "size"}>{ind + 1}</option>;
             })}

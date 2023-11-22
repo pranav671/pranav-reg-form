@@ -14,7 +14,7 @@ export const server_url = "http://my-app-env-2.eba-ni8tqtmu.eu-north-1.elasticbe
 
 export default function App() {
   const [data, setData] = React.useState([]);
-  const [info, setInfo] = React.useState({'event':'','cat':''});
+  const [info, setInfo] = React.useState({'event':"Select Event",'cat':"Select Category", 'len' : "Select Team Size"});
   
   const saveData = (data, x) => {
     console.log("Data recieved in app.js");
@@ -26,8 +26,8 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Page1 onSave={saveData}/>} />
-        <Route path="/continue" element={<Fun data={data} info={info}/>} />
+        <Route path="/" element={<Page1 onSave={saveData} members={data} info={info}/>} />
+        <Route path="/continue" element={<Fun data={data} info={info} onSave={saveData}/>} />
         <Route path="/exp/:id" element={<Exp text="Testing"/>}/> {/*for testing extrafeatures*/}
         <Route path="/applications/:id" element={<Details/>}/>
       </Routes>
