@@ -14,7 +14,7 @@ export const server_url = "http://my-app-env-2.eba-ni8tqtmu.eu-north-1.elasticbe
 
 export default function App() {
   const [data, setData] = React.useState([]);
-  const [info, setInfo] = React.useState({'event':"Select Event",'cat':"Select Category", 'len' : "Select Team Size"});
+  const [info, setInfo] = React.useState({'event':"Select Event",'cat':["Select Category"], 'len' : "Select Team Size"});
   
   const saveData = (data, x) => {
     console.log("Data recieved in app.js");

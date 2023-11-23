@@ -15,21 +15,25 @@ export const Page1 = (props) => {
     // }
   );
 
-  const options = [{"_id":"655d995298bce80e516c9a53","event":"Robotics Premier League","categories":["RoboSoccer (Wired)","RoboSoccer (Wireless)","RoboRacer (Wired)","RoboRacer (Wireless)","Line Follower"],"limit":2},{"_id":"655d9a1098bce80e516c9a54","event":"Geek Gala","categories":["Geek Gala"],"limit":5},{"_id":"655d9a4698bce80e516c9a55","event":"S.T.E.A.M. Workshops","categories":["Workshop 1","Workshop 2","Workshop 3"],"limit":1}];
+  // const options = [{"_id":"655d995298bce80e516c9a53","event":"Robotics Premier League","categories":["RoboSoccer (Wired)","RoboSoccer (Wireless)","RoboRacer (Wired)","RoboRacer (Wireless)","Line Follower"],"limit":2},{"_id":"655d9a1098bce80e516c9a54","event":"Geek Gala","categories":["Geek Gala"],"limit":5},{"_id":"655d9a4698bce80e516c9a55","event":"S.T.E.A.M. Workshops","categories":["Workshop 1","Workshop 2","Workshop 3"],"limit":1}];
 
-  // const options = await axios.get('https://us-east-1.aws.data.mongodb-api.com/app/list-options-grvqr/endpoint/options')
-  //   .catch(err => {});
-  // const events =[];
-
-
+  const [options, setOptions] = useState([]);
+  
+  
   //funtion will be called only on the first render
-  useEffect(()=>{
-    let temp=[];
-    options.forEach((op)=>{
-      temp.push(op.event);
-    })
-    setEvents(temp);
-    // console.log(events);
+  useEffect( ()=>{
+    axios.get('https://us-east-1.aws.data.mongodb-api.com/app/list-options-grvqr/endpoint/options')
+      .then(res => {
+        // console.log(res.data);
+        let temp=[];
+        // options = res.data;
+        res.data.forEach((op)=>{
+          temp.push(op.event);
+        })
+        setEvents(temp);
+        setOptions(res.data);
+      })
+      .catch(err => {});
   }, [])
 
   const getSize = (event) => {
@@ -55,7 +59,7 @@ export const Page1 = (props) => {
     "XI",
     "XII",
   ];
-  const [categories, setCategories] = useState({});
+  const [categories, setCategories] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(props.info.event);
   const [selectedCategory, setSelectedCategory] = useState(props.info.cat);
   const [selectedTeamSize, setSelectedTeamSize] = useState(props.info.len);
